@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Rectangle?>
+
+<AnchorPane fx:id="background" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.dataStructureAnimation.Controller">
+   <children>
+      <VBox fx:id="buttonContainer" layoutX="25.0" layoutY="90.0" prefHeight="200.0" prefWidth="129.0">
+         <children>
+            <Button fx:id="pushButton" mnemonicParsing="false" onAction="#onPushButtonAction" prefHeight="25.0" prefWidth="74.0" text="Push">
+               <VBox.margin>
+                  <Insets bottom="2.0" left="5.0" right="5.0" top="5.0" />
+               </VBox.margin>
+            </Button>
+            <Button fx:id="popButton" mnemonicParsing="false" onAction="#onPopActionButton" prefHeight="25.0" prefWidth="74.0" text="Pop">
+               <VBox.margin>
+                  <Insets bottom="2.0" left="5.0" right="5.0" top="5.0" />
+               </VBox.margin>
+            </Button>
+            <Button fx:id="clearButton" mnemonicParsing="false" onAction="#onClearActionButton" prefHeight="17.0" prefWidth="74.0" text="Clear">
+               <VBox.margin>
+                  <Insets bottom="2.0" left="5.0" right="5.0" top="5.0" />
+               </VBox.margin>
+            </Button>
+            <Button fx:id="peekButton" mnemonicParsing="false" onAction="#onPeekButtonAction" prefHeight="17.0" prefWidth="74.0" text="Peek">
+               <VBox.margin>
+                  <Insets bottom="2.0" left="5.0" right="5.0" top="5.0" />
+               </VBox.margin>
+            </Button>
+         </children>
+      </VBox>
+      <BorderPane fx:id="shapeDispenser" layoutX="474.0" layoutY="55.0" prefHeight="69.0" prefWidth="74.0" style="-fx-border-color: black; -fx-border-width: 3;">
+        </BorderPane>
+      <AnchorPane fx:id="stackContainer" layoutX="196.0" layoutY="252.0" style="-fx-border-color: black; -fx-border-width: 2;">
+         <children>
+            <BorderPane fx:id="pushedCircleHolder" layoutX="2.0" layoutY="2.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <center>
+
+               </center>
+            </BorderPane>
+            <Rectangle fx:id="stackCoverTop" arcHeight="5.0" arcWidth="5.0" fill="#b2ccff" height="50.0" stroke="BLACK" strokeWidth="0.0" width="110.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#b2cdff" height="117.0" layoutX="2.0" layoutY="50.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="110.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="50.0" />
+         </children>
+      </AnchorPane>
+      <BorderPane fx:id="shapeCollector" layoutX="485.0" layoutY="300.0" prefHeight="69.0" prefWidth="74.0" style="-fx-border-color: black; -fx-border-width: 3;" />
+   </children>
+</AnchorPane>

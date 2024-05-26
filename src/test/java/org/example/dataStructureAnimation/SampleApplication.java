@@ -1,4 +1,4 @@
-package org.example.demo;
+package org.example.dataStructureAnimation;
 
 import javafx.application.Application;
 import javafx.fxml.Initializable;
@@ -15,7 +15,7 @@ import java.net.URL;
 import java.util.Arrays;
 import java.util.ResourceBundle;
 
-public class Sample extends Application {
+public class SampleApplication extends Application {
     public static AnchorPane background;
     public static Scene scene;
 
@@ -29,7 +29,7 @@ public class Sample extends Application {
 
         @Override
     public void start(Stage stage) throws Exception {
-        //FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("StackAnimation.fxml"));
+        //FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("StackAnimation.fxml"));
 
         background = new AnchorPane();
         background.setPrefSize(400, 500);

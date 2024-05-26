@@ -1,4 +1,4 @@
-package org.example.demo;
+package org.example.dataStructureAnimation;
 
 import java.util.Collection;
 

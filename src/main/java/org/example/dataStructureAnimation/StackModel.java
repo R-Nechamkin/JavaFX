@@ -1,9 +1,11 @@
-package org.example.demo;
+package org.example.dataStructureAnimation;
 
 import java.util.ArrayDeque;
 import java.util.Collection;
 import java.util.Deque;
 import java.util.Iterator;
+
+
 
 public class StackModel<T> implements Model<T>{
     public Deque<T> stack;
