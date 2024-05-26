@@ -12,14 +12,14 @@ public class HelloApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("StackAnimation.fxml"));
-
-
         Scene scene = new Scene(fxmlLoader.load());
-        Controller controller = fxmlLoader.getController();
-        controller.setModel(new StackAnimationModel1(controller));
-        AnchorPane background = (AnchorPane) scene.getRoot();
 
-        stage.setTitle("Hello!");
+        Controller controller = fxmlLoader.getController();
+
+        Model<Controller.Element> model = new StackModel<>();
+        controller.setModel(model);
+
+        stage.setTitle("Stack Animation!");
         stage.setScene(scene);
         stage.show();
 

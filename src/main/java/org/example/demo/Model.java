@@ -1,13 +1,48 @@
 package org.example.demo;
 
-import javafx.animation.SequentialTransition;
-import javafx.animation.Transition;
+import java.util.Collection;
 
-public interface Model {
+public interface Model<T> extends Collection<T> {
 
-    SequentialTransition getPushAnimation();
+    /**
+     * Adds an element to the data structure
+     * @param element
+     */
+    void addElement(T element);
 
-    SequentialTransition getPopAnimation();
 
-    SequentialTransition getPeekAnimation();
+    /**
+     * Returns an element from the data structure.
+     * Depending on the data structure, this can either be a random element
+     *  or a specific one (like the top element of a stack)
+     * @return
+     */
+    T getElement();
+
+
+    /**
+     * Removes an element from the data structure.
+     * Depending on the data structure, this can either be a random element
+     *  or a specific one (like the top element of a stack)
+     */
+    void removeElement();
+
+
+    /**
+     * Removes all elements from data structure
+     */
+    void clear();
+
+
+    /**
+     * Returns true if there are no elements in the list
+     * @return
+     */
+    boolean isEmpty();
+
+    /**
+     * Returns the number of elements in the list
+     * @return
+     */
+    int size();
 }

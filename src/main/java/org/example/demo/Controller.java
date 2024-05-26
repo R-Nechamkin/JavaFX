@@ -31,32 +31,33 @@ public class Controller implements Initializable {
     public BorderPane shapeCollector;
     public BorderPane pushedCircleHolder;
 
-    private Deque<StackEl> stack = new ArrayDeque<>();
-    private Random rand = new Random();
+    private final Random rand = new Random();
     private SequentialTransition pushAnimation;
     private SequentialTransition popAnimation;
     private SequentialTransition peekAnimation;
+
+    private Model<Element> model;
+    private Animations animations;
 
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         setNewActiveCircle();
-
     }
 
-    public void setModel(Model model){
-        pushAnimation = model.getPushAnimation();
-        popAnimation = model.getPopAnimation();
-        peekAnimation = model.getPeekAnimation();
+    public void setModel(Model<Element> model){
+        this.model = model;
+        this.animations = new Animations(model);
     }
+
 
     void setNewActiveCircle(){
         Color color = getRandomColor(rand);
-        activeCircle = StackEl.getCircleFromColor(color);
+        activeCircle = Element.getCircleFromColor(color);
 
         background.getChildren().add(activeCircle);
-        activeCircle.setLayoutX(shapeDispenser.getLayoutX() + (11.0/6) * StackEl.radius);
-        activeCircle.setLayoutY(shapeDispenser.getLayoutY() + (11.0/6) * StackEl.radius);
+        activeCircle.setLayoutX(shapeDispenser.getLayoutX() + (11.0/6) * Element.radius);
+        activeCircle.setLayoutY(shapeDispenser.getLayoutY() + (11.0/6) * Element.radius);
 
     }
 
@@ -64,7 +65,7 @@ public class Controller implements Initializable {
         popAnimation.stop();
         peekAnimation.stop();
 
-        stack.push(new StackEl((Color) activeCircle.getFill()));
+        model.addElement(new Element((Color) activeCircle.getFill()));
         pushAnimation.setNode(activeCircle);
 
         pushAnimation.play();
@@ -76,8 +77,8 @@ public class Controller implements Initializable {
         pushAnimation.stop();
         popAnimation.stop();
 
-        if (!stack.isEmpty()) {
-            Circle circle = StackEl.getCircleFromColor(stack.peek().circle);
+        if (!model.isEmpty()) {
+            Circle circle = Element.getCircleFromColor(model.getElement().color);
             pushedCircleHolder.setCenter(circle);
 
             peekAnimation.setOnFinished(
@@ -93,8 +94,11 @@ public class Controller implements Initializable {
         pushAnimation.stop();
         peekAnimation.stop();
 
-        if (!stack.isEmpty()) {
-            Circle circle = StackEl.getCircleFromColor(stack.pop().circle);
+        if (!model.isEmpty()) {
+            Color color = model.getElement().color;
+            model.removeElement();
+
+            Circle circle = Element.getCircleFromColor(color);
             pushedCircleHolder.setCenter(circle);
             popAnimation.setNode(circle);
 
@@ -104,7 +108,7 @@ public class Controller implements Initializable {
     }
 
     public void onClearActionButton(ActionEvent actionEvent){
-        stack.clear();
+        model.clear();
     }
 
     private Color getRandomColor(Random rand){
@@ -125,25 +129,111 @@ public class Controller implements Initializable {
         b.toFront();
     }
 
-    static class StackEl {
+    static class Element {
         static double radius = 20;
-        Color circle;
+        Color color;
 
         static Circle getCircleFromColor(Color color){
-            Circle circle = new Circle(StackEl.radius, color);
+            Circle circle = new Circle(Element.radius, color);
             circle.setStrokeWidth(2);
             circle.setStroke(Color.BLACK);
             return circle;
         }
 
-        public StackEl(Color circle) {
-            this.circle = circle;
+        public Element(Color color) {
+            this.color = color;
         }
 
         public Color getColor(){
-            return  circle;
+            return color;
         }
 
 
+    }
+
+    public class Animations {
+        Model<Element> circleHolder;
+
+
+        public Animations(Model<Element> model){
+            this.circleHolder = model;
+
+            pushAnimation = getPushAnimation();
+            popAnimation = getPopAnimation();
+            peekAnimation = getPeekAnimation();
+
+        }
+
+        public SequentialTransition getPushAnimation() {
+
+            TranslateTransition move = createMoveCircleTransition();
+            FadeTransition fade = createFadeCircleTransition();
+
+            return new SequentialTransition(move, fade);
+        }
+
+        private TranslateTransition createMoveCircleTransition(){
+            TranslateTransition move = new TranslateTransition();
+            move.setDuration(Duration.seconds(1));
+
+            final double[] ADJUST_FOR_CONTAINER =
+                    {shapeDispenser.getLayoutX(), shapeDispenser.getLayoutY()};
+            double endX = stackContainer.getLayoutX() - ADJUST_FOR_CONTAINER[0] + Element.radius;
+            System.out.println(endX);
+            double endY = stackContainer.getLayoutY() - ADJUST_FOR_CONTAINER[1] - Element.radius/2;
+            System.out.println(endY);
+
+            move.setToX(endX);
+            move.setToY(endY);
+
+            move.setOnFinished(e -> {
+                activeCircle.toFront();
+            });
+            return move;
+        }
+
+        private FadeTransition createFadeCircleTransition() {
+            FadeTransition fadeTransition = new FadeTransition(Duration.seconds(1));
+            fadeTransition.setToValue(0.1);
+            fadeTransition.setOnFinished(e -> {
+                background.getChildren().remove(activeCircle);
+                setNewActiveCircle();
+            });
+            return fadeTransition;
+        }
+
+        public SequentialTransition getPopAnimation(){
+            TranslateTransition popAnimation = new TranslateTransition();
+            popAnimation.setDuration(Duration.seconds(1));
+
+            final double[] ADJUST_FOR_CONTAINER =
+                    {stackContainer.getLayoutX(), stackContainer.getLayoutY()};
+
+            double endX = shapeCollector.getLayoutX() - ADJUST_FOR_CONTAINER[0] - Element.radius;
+            double endY = shapeCollector.getLayoutY() - ADJUST_FOR_CONTAINER[1] + Element.radius /2;
+
+            popAnimation.setToX(endX);
+            popAnimation.setToY(endY);
+
+            return new SequentialTransition(popAnimation);
+        }
+
+        public SequentialTransition getPeekAnimation(){
+
+            final Duration FADE_DURATION = Duration.seconds(1.5);
+
+            FadeTransition startFade = new FadeTransition(FADE_DURATION,  stackCoverTop);
+            startFade.setFromValue(1.0);
+            startFade.setToValue(.25);
+
+            FadeTransition reverseFade = new FadeTransition(FADE_DURATION, stackCoverTop);
+            reverseFade.setFromValue(.25);
+            reverseFade.setToValue(1.0);
+
+            PauseTransition pause = new PauseTransition(FADE_DURATION);
+
+
+            return new SequentialTransition(startFade, pause, reverseFade);
+        }
     }
 }
