@@ -1,0 +1,11 @@
+/* JavaFX CSS - Leave this comment until you have at least create one rule which uses -fx-Property */
+
+.button{
+	-fx-color: pink;
+	-fx-pref-width: 60;
+	-fx-pref-height: 60;
+}
+
+.resultArea{
+	-fx-font-size: 20 vw;
+}
